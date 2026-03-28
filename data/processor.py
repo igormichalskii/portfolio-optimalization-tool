@@ -1,4 +1,21 @@
 import pandas as pd
+import yfinance as yf
+
+def validate_tickers(tickers):
+    valid, invalid = [], []
+    for t in tickers:
+        if not t:
+            continue
+
+        try:
+            if not yf.Ticker(t).history(period="1d").empty:
+                valid.append(t)
+            else:
+                invalid.append(t)
+        except Exception as e:
+            invalid.append(t)
+    
+    return valid, invalid
 
 def calculate_portfolio_dividend(weights, div_yields):
     """Calculates the weighted average dividend yield."""

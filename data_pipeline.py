@@ -1,7 +1,8 @@
 import yfinance as yf
 import pandas as pd
 import numpy as np
-from pypfopt import expected_returns, risk_models, black_litterman, HRPOpt
+import matplotlib.pyplot as plt
+from pypfopt import expected_returns, risk_models, black_litterman, HRPOpt, plotting
 from pypfopt.black_litterman import BlackLittermanModel
 from pypfopt.efficient_frontier import EfficientFrontier
 
@@ -85,7 +86,7 @@ def optimize_black_litterman(prices, benchmark_prices, mcaps, views):
     # Optimize using the new BL returns, and covariance
     ef = EfficientFrontier(bl_returns, bl_cov)
     raw_weights = ef.max_sharpe()
-    
+
     cleaned_weights = ef.clean_weights()
     performance = ef.portfolio_performance(verbose=False)
 
@@ -140,6 +141,45 @@ def generate_export_report(weights, performance, total_div_yield):
 
     report = pd.concat([df_weights, df_metrics], ignore_index=True)
     return report.to_csv(index=False).encode('utf-8')
+
+def plot_monte_carlo_ef(prices, n_portfolios=3000):
+    mu = expected_returns.mean_historical_return(prices)
+    S = risk_models.CovarianceShrinkage(prices).ledoit_wolf()
+
+    ef = EfficientFrontier(mu, S)
+    fig, ax = plt.subplots(figsize=(10,6))
+
+    plotting.plot_efficient_frontier(ef, ax=ax, show_assets=True)
+
+    n_assets = len(prices.columns)
+    random_returns, random_volatility = [], []
+
+    for _ in range(n_portfolios):
+        weights = np.random.random(n_assets)
+        weights /= np.sum(weights)
+
+        random_returns.append(np.dot(weights, mu))
+        random_volatility.append(np.sqrt(np.dot(weights.T, np.dot(S, weights))))
+
+    sharpe_ratios = np.array(random_returns) / np.array(random_volatility)
+    sc = ax.scatter(
+        random_volatility,
+        random_returns,
+        marker='.',
+        c=sharpe_ratios,
+        cmap='viridis',
+        alpha=0.3,
+        zorder=0
+    )
+
+    plt.colorbar(sc, label='Sharpe Ratio')
+    ax.set_title("Efficient Frontier vs. 3,000 Random Portfolios")
+    ax.set_xlabel("Expected Volatility (Risk)")
+    ax.set_ylabel("Expected Return")
+
+    return fig
+
+
 if __name__ == "__main__":
     # Example of usage
     prices, returns = fetch_market_data(['SPY', 'AAPL', 'TSLA', 'QQQ'], '2020-01-01', '2024-01-01')

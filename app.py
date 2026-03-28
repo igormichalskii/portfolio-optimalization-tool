@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from data_pipeline import fetch_market_data, optimize_markowitz, generate_export_report, optimize_hrp, optimize_black_litterman
+from data_pipeline import fetch_market_data, optimize_markowitz, generate_export_report, optimize_hrp, optimize_black_litterman, plot_monte_carlo_ef
 
 # --- Page Config ---
 st.set_page_config(page_title="Portfolio Optimization Tool", layout="wide")
@@ -55,6 +55,9 @@ if st.sidebar.button("Optimize"):
             fig, ax = plt.subplots(figsize=(8,6))
             sns.heatmap(returns.corr(), annot=True, cmap='coolwarm', ax=ax)
             st.pyplot(fig)
+            st.subheader("Efficient Frontier")
+            ef_fig = plot_monte_carlo_ef(prices)
+            st.pyplot(ef_fig)
 
         with weight_col:
             st.subheader("Optimal Weights")

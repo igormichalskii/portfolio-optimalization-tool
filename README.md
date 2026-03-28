@@ -1,6 +1,6 @@
 # Quantitative Portfolio Optimization Engine
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](YOUR_STREAMLIT_APP_URL_HERE)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://imichalskiportfolioopti.streamlit.app/)
 
 ## Overview
 A dynamic, real-time web application built in Python that allocates capital across financial assets using advanced quantitative models. This tool ingests historical market data, calculates covariance matrices with shrinkage estimators, and outputs optimal portfolio weights to maximize risk-adjusted returns. 

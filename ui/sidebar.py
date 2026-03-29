@@ -24,7 +24,7 @@ def create_sidebar():
         default=['NVDA', 'AAPL']
     )
 
-    custom_tickers = st.sidebar.text_input("Add Custom Tickers (comma separated)", "SPY")
+    custom_tickers = st.sidebar.text_input("Add Custom Tickers (comma separated)")
 
     start_date = st.sidebar.date_input("Start Date", value=pd.to_datetime("2020-01-01"))
     end_date = st.sidebar.date_input("End Date", value=pd.to_datetime("today"))
@@ -45,6 +45,5 @@ def create_sidebar():
 
     optimization_model = model_options[selected_model_choice]
 
-    apply_constraints = st.sidebar.checkbox("Apply Sector Constraints (Max 30%)", value=False)
     if st.sidebar.button("Optimize"):
-        execution(custom_tickers, selected_list, optimization_model, apply_constraints, start_date, end_date)
+        execution(custom_tickers, selected_list, optimization_model, start_date, end_date)

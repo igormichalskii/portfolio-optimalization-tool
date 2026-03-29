@@ -48,10 +48,7 @@ def execution(custom_tickers, selected_list, model_choice, apply_constraints, st
 
         # 2. Route to Model
         if model_choice == 'model_markowitz' or model_choice == 'model_min_vol' or model_choice == 'model_max_quad':
-            if apply_constraints:
-                weights, performance = optimize_markowitz_constrained(prices, model_choice, sector_map)
-            else:
-                weights, performance = optimize_markowitz(prices, model_choice)
+            weights, performance = optimize_markowitz(prices, model_choice)
 
         elif model_choice == 'model_hrp':
             weights, performance = optimize_hrp(prices, returns)

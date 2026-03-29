@@ -26,7 +26,7 @@ def validate_tickers(tickers):
     
     return valid, invalid
 
-def execution(custom_tickers, selected_list, model_choice, apply_constraints, start_date, end_date):
+def execution(custom_tickers, selected_list, model_choice, start_date, end_date):
     raw_custom = [t.strip().upper() for t in custom_tickers.split(',')] if custom_tickers else []
     all_tickers = list(set(selected_list + raw_custom))
     all_tickers = [t for t in all_tickers if t]
